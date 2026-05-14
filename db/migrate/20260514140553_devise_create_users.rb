@@ -27,8 +27,8 @@ class DeviseCreateUsers < ActiveRecord::Migration[7.1]
       t.datetime :confirmation_sent_at
       t.string :uncomfirmed_email
 
-      t.string first_name, null: false
-      t.string last_name,  null: false
+      t.string :first_name, null: false
+      t.string :last_name,  null: false
       t.string :role, null: false, default: 'buyer'
 
       t.timestamps
