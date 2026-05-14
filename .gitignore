@@ -1,0 +1,29 @@
+# ====================== Rails ======================
+/log/*
+/tmp/*
+/storage/*
+
+# ====================== Базы данных ======================
+*.sqlite3
+/db/*.sqlite3
+
+# ====================== Secrets & Environment ======================
+.env
+.env*.local
+
+# ====================== Зависимости ======================
+/vendor/bundle
+/node_modules
+/public/assets
+/public/packs
+
+# ====================== VS Code ======================
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/launch.json
+
+# ====================== OS и мусор ======================
+.DS_Store
+Thumbs.db
+*.swp
