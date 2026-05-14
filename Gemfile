@@ -57,7 +57,7 @@ group :development do
   # gem "rack-mini-profiler"
 
   # Speed up commands on slow machines / big apps [https://github.com/rails/spring]
-  # gem "spring"
+  gem 'spring'
   # === Ruby LSP & Development tools ===
   gem 'rubocop', require: false
   gem 'rubocop-performance', require: false
@@ -72,4 +72,4 @@ group :test do
   gem 'selenium-webdriver'
 end
 
-gem "devise", "~> 5.0"
+gem 'devise', '~> 5.0'
