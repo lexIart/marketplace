@@ -14,7 +14,10 @@ class User < ApplicationRecord
 
   # Assoications
 
-  has_many :products, dependent: :destroy
+  has_many :products,
+           foreign_key: :seller_id,
+           dependent: :destroy,
+           inverse_of: :seller
 
   has_many :orders_as_buyer,
            class_name: 'Order',
