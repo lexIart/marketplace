@@ -7,7 +7,7 @@ class User < ApplicationRecord
          :confirmable,
          :validatable
 
-  enum :role, { buyer: "buyer", seller: "seller", admin: "admin" },
+  enum :role, { buyer: 'buyer', seller: 'seller', admin: 'admin' },
        # role-assoicated methods generate (role_seller? and etc.)
        suffix: true,
        default: :buyer
@@ -41,7 +41,7 @@ class User < ApplicationRecord
   validates :username,
             presence: true,
             uniqueness: { case_sensitive: false },
-            length: { minimum: 3 , maximum: 30 },
+            length: { minimum: 3, maximum: 30 },
             format: { with: /\A[a-z0-9_]+\z/ }
 
   before_validation :downcase_username, if: :username_changed?

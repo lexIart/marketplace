@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2026_05_15_150544) do
+ActiveRecord::Schema[7.1].define(version: 2026_05_18_150312) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -39,6 +39,25 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_15_150544) do
     t.index ["product_id"], name: "index_product_categories_on_product_id"
   end
 
+  create_table "products", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.text "description"
+    t.integer "status", default: 0, null: false
+    t.datetime "published_at"
+    t.uuid "seller_id", null: false
+    t.bigint "category_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id", "status"], name: "index_products_on_category_id_and_status"
+    t.index ["category_id"], name: "index_products_on_category_id"
+    t.index ["published_at"], name: "index_products_on_published_at"
+    t.index ["seller_id", "status"], name: "index_products_on_seller_id_and_status"
+    t.index ["seller_id"], name: "index_products_on_seller_id"
+    t.index ["slug"], name: "index_products_on_slug", unique: true
+    t.index ["status"], name: "index_products_on_status"
+  end
+
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -59,12 +78,16 @@ ActiveRecord::Schema[7.1].define(version: 2026_05_15_150544) do
     t.string "role", default: "buyer", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "username", null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
     t.index ["role"], name: "index_users_on_role"
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   add_foreign_key "categories", "categories", column: "parent_id"
   add_foreign_key "product_categories", "categories"
+  add_foreign_key "products", "categories"
+  add_foreign_key "products", "users", column: "seller_id"
 end
