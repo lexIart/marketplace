@@ -9,8 +9,8 @@ class Product < ApplicationRecord
 
   # ActiveStorage - active_storage_attachments + active_storage_blobs
   # record.id = product.id?
-  has_one_attached :thumbnail
-  # has_many_attached :images
+  has_one_attached :thumbnail # main pic
+  # has_many_attached :images # gallery -> later
 
   # action_text_rich_texts
   has_rich_text :description # Action Text
