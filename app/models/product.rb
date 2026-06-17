@@ -4,8 +4,12 @@ class Product < ApplicationRecord
   # FK - category_id in category.rb model
   belongs_to :category, optional: true
 
-  # has_many :variants, dependent: :destroy
+  has_many :variants, dependent: :destroy
+  has_many :product_option_types, dependent: :destroy
+  has_many :option_types, through: :product_option_types
   # has_many :product_images, dependent: :destroy
+
+  accepts_nested_attributes_for :variants, allow_destroy: true
 
   # ActiveStorage - active_storage_attachments + active_storage_blobs
   # record.id = product.id?
