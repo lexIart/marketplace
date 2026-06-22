@@ -6,7 +6,9 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get 'up' => 'rails/health#show', as: :rails_health_check
 
+  # all routes inside will have prefix /seller/ in URL and will look up for controllers in controllers/seller/
   namespace :seller do
+    # generate 7 RESTful routes for products; /seller/products/, controller - Seller:ProductsController
     resources :products
   end
 
