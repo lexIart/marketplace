@@ -73,6 +73,7 @@ group :test do
 end
 
 gem 'devise', '~> 5.0'
+gem 'pundit', '~> 2.3'
 
 gem 'dotenv-rails', '~> 3.2', groups: %i[development test]
 
