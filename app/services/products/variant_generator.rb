@@ -72,7 +72,6 @@ module Products
       rescue ActiveRecord::RecordNotFound, ArgumentError => e
         return failure(e.message)
       end
-
       generate_combinations.each do |combination| # combination — массив OptionValue (один из каждой группы)
         combo_names = combination.map { |ov| "#{ov.option_type.name}: #{ov.name}" }.join(' + ')
 
@@ -209,7 +208,7 @@ module Products
         product: @product,
         sku: sku,
         price: @default_price,
-        stock_quantity: @default_stock # или stock — зависит от вашей модели
+        stock: @default_stock
         # available_on: Time.current, etc.
       )
     end
@@ -230,7 +229,7 @@ module Products
       base = if @product.respond_to?(:sku) && @product.sku.present?
                @product.sku.to_s.upcase
              else
-               @product.name.to_s.parameterize.upcase.first(12)
+               @product.slug.to_s.upcase.first(12)
              end
 
       option_parts = option_values.sort_by { |ov| [ov.option_type_id.to_s, ov.id.to_s] }.map do |ov|

@@ -77,3 +77,5 @@ gem 'devise', '~> 5.0'
 gem 'dotenv-rails', '~> 3.2', groups: %i[development test]
 
 gem 'russian'
+
+gem "pry-rails", "~> 0.3.11"
