@@ -72,6 +72,9 @@ class Seller::ProductsController < ApplicationController
   end
 
   def product_params
-    params.require(:product).permit(:name, :slug, :status, :category_id, :thumbnail, :description)
+    params.require(:product).permit(
+      :name, :slug, :status, :category_id, :thumbnail, :description,
+      variants_attributes: %i[id price stock status]
+    )
   end
 end

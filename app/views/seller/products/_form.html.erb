@@ -35,5 +35,32 @@
     <% end %>
   </div>
 
+  <% if product.variants.any? %>
+    <h3>Варианты</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>SKU</th>
+          <th>Опции</th>
+          <th>Цена</th>
+          <th>Остаток</th>
+          <th>Статус</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= f.fields_for :variants do |vf| %>
+          <tr>
+            <!-- vf obj. - HTML form builder  -->
+            <td><%= vf.object.sku %></td>
+            <td><%= vf.object.option_summary %></td>
+            <td><%= vf.number_field :price, step: 0.01, min: 0 %></td>
+            <td><%= vf.number_field :stock, step: 1, min: 0 %></td>
+            <td><%= vf.select :status, %w[active inactive] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+
   <%= f.submit %>
 <% end %>
