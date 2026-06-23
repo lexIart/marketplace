@@ -6,7 +6,7 @@ class Seller::ProductsController < ApplicationController
   # To check if user role is seller (logged). If not - redirect to seed
   before_action :require_seller!
 
-  # Only for 4 actions because in the rest of 7 actions we don't need specific user ID
+  # Only actions that don't need any specific user ID's
   before_action :set_product, only: %i[show edit update destroy generate_variants add_simple_variant]
 
   def index
@@ -62,16 +62,14 @@ class Seller::ProductsController < ApplicationController
   def add_simple_variant
     authorize @product
 
-    if @product.variants.exists?(sku: "#{@product.slug.upcase}-DEFAULT")
+    simple_sku = @product.slug.upcase
+
+    if @product.variants.exists?(sku: simple_sku)
       redirect_to seller_product_path(@product), alert: 'Простой вариант уже существует.' and return
     end
 
-    @product.variants.create!(
-      sku: "#{@product.slug.upcase}-DEFAULT",
-      price: 0,
-      stock: 0
-    )
-
+    @product.variants.create!(sku: simple_sku, price: 0, stock: 0)
+    # lets redirect him to product edit
     redirect_to edit_seller_product_path(@product), notice: 'Простой вариант добавлен. Укажите цену и остаток.'
   end
 
