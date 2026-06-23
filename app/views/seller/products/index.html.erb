@@ -1,0 +1,33 @@
+<h1>Мои товары</h1>
+
+<%= link_to 'Добавить товар', new_seller_product_path %>
+
+<% if @products.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Название</th>
+        <th>Статус</th>
+        <th>Вариантов</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @products.each do |product| %>
+        <tr>
+          <td><%= product.name %></td>
+          <td><%= product.status %></td>
+          <td><%= product.variants.count %></td>
+          <td>
+            <%= link_to 'Просмотр', seller_product_path(product) %>
+            <%= link_to 'Изменить', edit_seller_product_path(product) %>
+            <%= link_to 'Удалить', seller_product_path(product),
+                        data: { turbo_method: :delete, turbo_confirm: 'Удалить товар?' } %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>У вас ещё нет товаров.</p>
+<% end %>

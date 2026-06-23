@@ -1,0 +1,40 @@
+<h1><%= @product.name %></h1>
+
+<% if @product.thumbnail.attached? %>
+  <%= image_tag @product.thumbnail, style: 'max-width: 400px' %>
+<% end %>
+
+<p>Статус: <%= @product.status %></p>
+<p>Категория: <%= @product.category&.name || 'Без категории' %></p>
+
+<div><%= @product.description %></div>
+
+<h2>Варианты (<%= @product.variants.count %>)</h2>
+
+<% if @product.variants.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>SKU</th>
+        <th>Цена</th>
+        <th>Остаток</th>
+        <th>Опции</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @product.variants.each do |variant| %>
+        <tr>
+          <td><%= variant.sku %></td>
+          <td><%= variant.price %></td>
+          <td><%= variant.stock %></td>
+          <td><%= variant.option_summary %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>Вариантов нет.</p>
+<% end %>
+
+<%= link_to 'Редактировать', edit_seller_product_path(@product) %>
+<%= link_to 'Назад', seller_products_path %>

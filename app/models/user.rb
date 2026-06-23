@@ -9,7 +9,7 @@ class User < ApplicationRecord
 
   enum :role, { buyer: 'buyer', seller: 'seller', admin: 'admin' },
        # role-assoicated methods generate (role_seller? and etc.)
-       suffix: true,
+       prefix: true,
        default: :buyer
 
   # Assoications

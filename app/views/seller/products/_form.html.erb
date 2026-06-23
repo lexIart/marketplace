@@ -1,0 +1,39 @@
+<%= form_with model: [:seller, product] do |f| %>
+  <% if product.errors.any? %>
+    <ul>
+      <% product.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <div>
+    <%= f.label :name, 'Название' %>
+    <%= f.text_field :name %>
+  </div>
+
+  <div>
+    <%= f.label :status, 'Статус' %>
+    <%= f.select :status, Product.statuses.keys.map { |s| [s.humanize, s] } %>
+  </div>
+
+  <div>
+    <%= f.label :category_id, 'Категория' %>
+    <%= f.collection_select :category_id, Category.all, :id, :name, include_blank: 'Без категории' %>
+  </div>
+
+  <div>
+    <%= f.label :description, 'Описание' %>
+    <%= f.rich_text_area :description %>
+  </div>
+
+  <div>
+    <%= f.label :thumbnail, 'Фото' %>
+    <%= f.file_field :thumbnail, accept: 'image/*' %>
+    <% if product.thumbnail.attached? %>
+      <%= image_tag product.thumbnail, style: 'max-width: 200px' %>
+    <% end %>
+  </div>
+
+  <%= f.submit %>
+<% end %>
