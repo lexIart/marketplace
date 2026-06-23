@@ -27,6 +27,10 @@ class ProductPolicy < ApplicationPolicy
     edit?
   end
 
+  def generate_variants?
+    edit?
+  end
+
   class Scope < ApplicationPolicy::Scope
     def resolve
       scope.by_seller(user)

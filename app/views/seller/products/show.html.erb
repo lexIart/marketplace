@@ -36,5 +36,33 @@
   <p>Вариантов нет.</p>
 <% end %>
 
+<h2>Сгенерировать варианты</h2>
+
+<%= form_with url: generate_variants_seller_product_path(@product) do |f| %>
+  <div>
+    <%= f.label :default_price, 'Цена по умолчанию' %>
+    <%= f.number_field :default_price, step: 0.01, min: 0 %>
+  </div>
+
+  <div>
+    <%= f.label :default_stock, 'Остаток по умолчанию' %>
+    <%= f.number_field :default_stock, step: 1, min: 0, value: 0 %>
+  </div>
+
+  <% OptionType.includes(:option_values).each do |option_type| %>
+    <div>
+      <strong><%= option_type.presentation %></strong>
+      <% option_type.option_values.each do |option_value| %>
+        <label>
+          <%= check_box_tag "selected_options[#{option_type.id}][]", option_value.id %>
+          <%= option_value.presentation %>
+        </label>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= f.submit 'Сгенерировать' %>
+<% end %>
+
 <%= link_to 'Редактировать', edit_seller_product_path(@product) %>
 <%= link_to 'Назад', seller_products_path %>

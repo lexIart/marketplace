@@ -7,7 +7,7 @@ class Seller::ProductsController < ApplicationController
   before_action :require_seller!
 
   # Only for 4 actions because in the rest of 7 actions we don't need specific user ID
-  before_action :set_product, only: %i[show edit update destroy]
+  before_action :set_product, only: %i[show edit update destroy generate_variants]
 
   def index
     # Pundit [ProductPolicy::Scope#resolve]
@@ -57,6 +57,29 @@ class Seller::ProductsController < ApplicationController
     authorize @product
     @product.destroy
     redirect_to seller_products_path, notice: 'Товар удалён.'
+  end
+
+  def generate_variants
+    authorize @product
+    # to_unsafe_h to avoid params obj permit decline because selected options - is a data from user form
+    selected_options = params[:selected_options]&.to_unsafe_h || {}
+
+    if selected_options.blank?
+      redirect_to seller_product_path(@product), alert: 'Выберите хотя бы одну опцию.' and return
+    end
+
+    selected_options.each_key do |option_type_id|
+      @product.product_option_types.find_or_create_by!(option_type_id: option_type_id)
+    end
+
+    result = Products::VariantGenerator.call(
+      @product,
+      selected_options,
+      default_price: params[:default_price],
+      default_stock: params[:default_stock] || 0
+    )
+
+    redirect_to seller_product_path(@product), notice: result.message
   end
 
   private
