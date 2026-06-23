@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     # generate 7 RESTful routes for products; /seller/products/, controller - Seller:ProductsController
     resources :products do
       post :generate_variants, on: :member
+      post :add_simple_variant, on: :member
     end
   end
 

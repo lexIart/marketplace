@@ -7,7 +7,7 @@ class Seller::ProductsController < ApplicationController
   before_action :require_seller!
 
   # Only for 4 actions because in the rest of 7 actions we don't need specific user ID
-  before_action :set_product, only: %i[show edit update destroy generate_variants]
+  before_action :set_product, only: %i[show edit update destroy generate_variants add_simple_variant]
 
   def index
     # Pundit [ProductPolicy::Scope#resolve]
@@ -57,6 +57,22 @@ class Seller::ProductsController < ApplicationController
     authorize @product
     @product.destroy
     redirect_to seller_products_path, notice: 'Товар удалён.'
+  end
+
+  def add_simple_variant
+    authorize @product
+
+    if @product.variants.exists?(sku: "#{@product.slug.upcase}-DEFAULT")
+      redirect_to seller_product_path(@product), alert: 'Простой вариант уже существует.' and return
+    end
+
+    @product.variants.create!(
+      sku: "#{@product.slug.upcase}-DEFAULT",
+      price: 0,
+      stock: 0
+    )
+
+    redirect_to edit_seller_product_path(@product), notice: 'Простой вариант добавлен. Укажите цену и остаток.'
   end
 
   def generate_variants

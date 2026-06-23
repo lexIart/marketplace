@@ -34,6 +34,10 @@
   </table>
 <% else %>
   <p>Вариантов нет.</p>
+  <%= button_to 'Добавить продукт без вариаций',
+                add_simple_variant_seller_product_path(@product),
+                method: :post,
+                data: { turbo_confirm: 'Добавить простой вариант без опций?' } %>
 <% end %>
 
 <h2>Сгенерировать варианты</h2>
