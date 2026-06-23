@@ -35,6 +35,20 @@
     <% end %>
   </div>
 
+  <h3>Характеристики</h3>
+  <div data-controller="specifications">
+    <div data-specifications-target="container">
+      <% product.specifications.each do |key, value| %>
+        <div class="spec-row">
+          <span><%= key %></span>
+          <%= text_field_tag "product[specifications][#{key}]", value, placeholder: 'Значение' %>
+          <button type="button" data-action="click->specifications#removeRow">Удалить</button>
+        </div>
+      <% end %>
+    </div>
+    <button type="button" data-action="click->specifications#addRow">+ Добавить характеристику</button>
+  </div>
+
   <% if product.variants.any? %>
     <h3>Варианты</h3>
     <table>

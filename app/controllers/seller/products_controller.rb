@@ -109,10 +109,15 @@ class Seller::ProductsController < ApplicationController
   end
 
   def product_params
-    params.require(:product).permit(
+    permitted = params.require(:product).permit(
       :name, :slug, :status, :category_id, :thumbnail, :description,
       variants_attributes: %i[id price stock status],
       specifications: {}
     )
+    # because of ActionController::UnfilteredParameters
+    specs = params.dig(:product, :specifications)&.to_unsafe_h || {}
+    permitted[:specifications] = specs.reject { |k, v| k.blank? || k.start_with?('__new_') || v.blank? }
+
+    permitted
   end
 end

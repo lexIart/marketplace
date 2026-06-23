@@ -9,6 +9,18 @@
 
 <div><%= @product.description %></div>
 
+<% if @product.specifications.any? %>
+  <h2>Характеристики</h2>
+  <table>
+    <% @product.specifications.each do |key, value| %>
+      <tr>
+        <td><strong><%= key %></strong></td>
+        <td><%= value %></td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
+
 <h2>Варианты (<%= @product.variants.count %>)</h2>
 
 <% if @product.variants.any? %>
