@@ -77,6 +77,21 @@
         <% end %>
       </tbody>
     </table>
+
+    <h4>Фотографии вариантов</h4>
+    <%= f.fields_for :variants do |vf| %>
+      <div>
+        <strong><%= vf.object.sku %></strong> — <%= vf.object.option_summary %>
+        <% if vf.object.images.attached? %>
+          <div>
+            <% vf.object.images.each do |img| %>
+              <%= image_tag img, style: 'max-width: 100px; margin-right: 4px', alt: vf.object.sku %>
+            <% end %>
+          </div>
+        <% end %>
+        <%= vf.file_field :images, multiple: true, accept: 'image/*' %>
+      </div>
+    <% end %>
   <% end %>
 
   <%= f.submit %>

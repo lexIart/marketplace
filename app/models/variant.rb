@@ -5,6 +5,8 @@ class Variant < ApplicationRecord
   has_many :option_values, through: :variant_option_values
   has_many :option_types, -> { distinct }, through: :option_values
 
+  has_many_attached :images
+
   before_validation do
     self.sku2 = sku2.presence
     self.ean  = ean.presence

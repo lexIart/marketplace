@@ -27,6 +27,7 @@
   <table>
     <thead>
       <tr>
+        <th>Фото</th>
         <th>SKU</th>
         <th>Цена</th>
         <th>Остаток</th>
@@ -38,6 +39,13 @@
     <tbody>
       <% @product.variants.each do |variant| %>
         <tr>
+          <td>
+            <% if variant.images.attached? %>
+              <%= image_tag variant.images.first, style: 'max-width: 60px', alt: variant.sku %>
+            <% elsif @product.thumbnail.attached? %>
+              <%= image_tag @product.thumbnail, style: 'max-width: 60px', alt: @product.name %>
+            <% end %>
+          </td>
           <td><%= variant.sku %></td>
           <td><%= variant.price %></td>
           <td><%= variant.stock %></td>
