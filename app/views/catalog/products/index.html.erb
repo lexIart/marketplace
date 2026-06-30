@@ -29,6 +29,26 @@
         <% end %>
       <% end %>
     </div>
+    <%# Пагинация %>
+    <% if @pagy.pages > 1 %>
+      <div class="mt-10 flex justify-center items-center gap-1">
+        <% if @pagy.prev %>
+          <%= link_to '← Назад', url_for(page: @pagy.prev), class: "px-4 py-2 rounded-lg border border-gray-300 text-sm hover:bg-gray-50" %>
+        <% end %>
+
+        <% (1..@pagy.pages).each do |num| %>
+          <% if num == @pagy.page %>
+            <span class="px-4 py-2 rounded-lg bg-gray-900 text-white text-sm"><%= num %></span>
+          <% else %>
+            <%= link_to num, url_for(page: num), class: "px-4 py-2 rounded-lg border border-gray-300 text-sm hover:bg-gray-50" %>
+          <% end %>
+        <% end %>
+
+        <% if @pagy.next %>
+          <%= link_to 'Вперёд →', url_for(page: @pagy.next), class: "px-4 py-2 rounded-lg border border-gray-300 text-sm hover:bg-gray-50" %>
+        <% end %>
+      </div>
+    <% end %>
   <% else %>
     <p class="text-gray-500 text-center py-20">Товаров пока нет.</p>
   <% end %>

@@ -5,9 +5,9 @@
     <%# Фото %>
     <div class="space-y-3">
       <% first_variant_with_image = @product.variants.find { |v| v.images.attached? } %>
-      <% display_image = first_variant_with_image&.images&.first || @product.thumbnail %>
+      <% display_image = first_variant_with_image&.images&.first.presence || (@product.thumbnail.attached? ? @product.thumbnail : nil) %>
 
-      <% if display_image.present? && display_image.respond_to?(:attached?) ? display_image.attached? : true %>
+      <% if display_image %>
         <div class="aspect-square bg-gray-100 rounded-xl overflow-hidden">
           <%= image_tag display_image, class: "w-full h-full object-cover", alt: @product.name %>
         </div>
