@@ -1,6 +1,30 @@
 <div class="max-w-7xl mx-auto px-4 py-8">
   <h1 class="text-3xl font-bold text-gray-900 mb-8">Каталог товаров</h1>
 
+  <%# Фильтры %>
+  <div class="flex flex-wrap items-center gap-3 mb-8">
+    <%# Категории %>
+    <div class="flex flex-wrap gap-2">
+      <%= link_to 'Все', catalog_products_path(sort: params[:sort]),
+            class: "px-3 py-1 rounded-full text-sm border #{params[:category_id].blank? ? 'bg-gray-900 text-white border-gray-900' : 'border-gray-300 hover:bg-gray-50'}" %>
+      <% @categories.each do |category| %>
+        <%= link_to category.name, catalog_products_path(category_id: category.id, sort: params[:sort]),
+              class: "px-3 py-1 rounded-full text-sm border #{params[:category_id] == category.id.to_s ? 'bg-gray-900 text-white border-gray-900' : 'border-gray-300 hover:bg-gray-50'}" %>
+      <% end %>
+    </div>
+
+    <%# Сортировка %>
+    <div class="ml-auto">
+      <%= form_with url: catalog_products_path, method: :get, data: { turbo: false } do |f| %>
+        <%= f.hidden_field :category_id, value: params[:category_id] %>
+        <%= f.select :sort,
+              [['Сначала новые', 'newest'], ['Сначала старые', 'oldest'], ['А–Я', 'name_asc'], ['Я–А', 'name_desc']],
+              { selected: params[:sort] || 'newest' },
+              { onchange: 'this.form.submit()', class: 'text-sm border border-gray-300 rounded-lg px-3 py-2 bg-white' } %>
+      <% end %>
+    </div>
+  </div>
+
   <% if @products.any? %>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       <% @products.each do |product| %>

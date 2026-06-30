@@ -2,10 +2,7 @@
 
 class Catalog::ProductsController < ApplicationController
   def index
-    @pagy, @products = pagy(
-      Product.published.includes(:category, :variants, thumbnail_attachment: :blob),
-      limit: 12
-    )
+    @pagy, @products = pagy(Products::CatalogQuery.new(params).call, limit: 12)
     @categories = Category.all
   end
 
