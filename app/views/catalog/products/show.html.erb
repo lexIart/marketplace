@@ -1,0 +1,68 @@
+<div class="max-w-5xl mx-auto px-4 py-8">
+  <%= link_to '← Назад в каталог', catalog_products_path, class: "text-sm text-gray-500 hover:text-gray-800" %>
+
+  <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-10">
+    <%# Фото %>
+    <div class="space-y-3">
+      <% first_variant_with_image = @product.variants.find { |v| v.images.attached? } %>
+      <% display_image = first_variant_with_image&.images&.first || @product.thumbnail %>
+
+      <% if display_image.present? && display_image.respond_to?(:attached?) ? display_image.attached? : true %>
+        <div class="aspect-square bg-gray-100 rounded-xl overflow-hidden">
+          <%= image_tag display_image, class: "w-full h-full object-cover", alt: @product.name %>
+        </div>
+      <% else %>
+        <div class="aspect-square bg-gray-100 rounded-xl flex items-center justify-center text-gray-400">Нет фото</div>
+      <% end %>
+    </div>
+
+    <%# Информация о товаре %>
+    <div>
+      <% if @product.category %>
+        <p class="text-sm text-gray-400 mb-1"><%= @product.category.name %></p>
+      <% end %>
+
+      <h1 class="text-2xl font-bold text-gray-900"><%= @product.name %></h1>
+
+      <% if @product.description.present? %>
+        <div class="mt-4 text-gray-600 prose prose-sm">
+          <%= @product.description %>
+        </div>
+      <% end %>
+
+      <%# Варианты %>
+      <% if @product.variants.any? %>
+        <div class="mt-6 space-y-3">
+          <h3 class="font-semibold text-gray-800">Варианты</h3>
+          <% @product.variants.active.each do |variant| %>
+            <div class="flex items-center justify-between border border-gray-200 rounded-lg px-4 py-3">
+              <div>
+                <p class="text-sm font-medium text-gray-800"><%= variant.option_summary.presence || 'Базовый вариант' %></p>
+                <p class="text-xs text-gray-400">SKU: <%= variant.sku %></p>
+              </div>
+              <div class="text-right">
+                <p class="font-semibold text-gray-900"><%= number_to_currency(variant.price, unit: '₽', format: '%n %u', separator: ',', delimiter: ' ') %></p>
+                <p class="text-xs text-gray-400"><%= variant.stock > 0 ? "В наличии: #{variant.stock}" : 'Нет в наличии' %></p>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%# Характеристики %>
+      <% if @product.specifications.any? %>
+        <div class="mt-6">
+          <h3 class="font-semibold text-gray-800 mb-3">Характеристики</h3>
+          <dl class="space-y-2">
+            <% @product.specifications.each do |key, value| %>
+              <div class="flex gap-4 text-sm">
+                <dt class="text-gray-500 w-40 shrink-0"><%= key %></dt>
+                <dd class="text-gray-900"><%= value %></dd>
+              </div>
+            <% end %>
+          </dl>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
