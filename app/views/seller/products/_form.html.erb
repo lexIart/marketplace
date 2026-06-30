@@ -59,17 +59,20 @@
           <th>Цена</th>
           <th>Остаток</th>
           <th>Статус</th>
+          <th>SKU2 (артикул поставщика)</th>
+          <th>EAN (штрихкод)</th>
         </tr>
       </thead>
       <tbody>
         <%= f.fields_for :variants do |vf| %>
           <tr>
-            <!-- vf obj. - HTML form builder  -->
             <td><%= vf.object.sku %></td>
             <td><%= vf.object.option_summary %></td>
             <td><%= vf.number_field :price, step: 0.01, min: 0 %></td>
             <td><%= vf.number_field :stock, step: 1, min: 0 %></td>
             <td><%= vf.select :status, %w[active inactive] %></td>
+            <td><%= vf.text_field :sku2, placeholder: 'Необязательно' %></td>
+            <td><%= vf.text_field :ean, placeholder: '8 или 13 цифр' %></td>
           </tr>
         <% end %>
       </tbody>

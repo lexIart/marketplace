@@ -111,7 +111,7 @@ class Seller::ProductsController < ApplicationController
   def product_params
     permitted = params.require(:product).permit(
       :name, :slug, :status, :category_id, :thumbnail, :description,
-      variants_attributes: %i[id price stock status],
+      variants_attributes: %i[id price stock status sku2 ean],
       specifications: {}
     )
     # because of ActionController::UnfilteredParameters
