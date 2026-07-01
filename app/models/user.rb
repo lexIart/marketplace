@@ -29,6 +29,8 @@ class User < ApplicationRecord
            through: :products,
            source: :orders
 
+  has_one :cart, dependent: :destroy
+
   has_many :reviews,
            foreign_key: :reviewer_id,
            dependent: :destroy
