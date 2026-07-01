@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 20_260_701_112_055) do
+ActiveRecord::Schema[7.1].define(version: 20_260_701_121_041) do
   # These are extensions that must be enabled in order to support this database
   enable_extension 'plpgsql'
 
@@ -210,6 +210,7 @@ ActiveRecord::Schema[7.1].define(version: 20_260_701_112_055) do
   add_foreign_key 'categories', 'categories', column: 'parent_id'
   add_foreign_key 'option_values', 'option_types'
   add_foreign_key 'product_categories', 'categories'
+  add_foreign_key 'product_categories', 'products'
   add_foreign_key 'product_option_types', 'option_types'
   add_foreign_key 'product_option_types', 'products'
   add_foreign_key 'products', 'categories'
