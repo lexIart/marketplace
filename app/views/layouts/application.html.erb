@@ -6,18 +6,44 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
-
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <% if notice %>
-      <p><%= notice %></p>
-    <% end %>
-    <% if alert %>
-      <p><%= alert %></p>
-    <% end %>
+  <body class="bg-gray-50 min-h-screen">
+    <nav class="bg-white border-b border-gray-200">
+      <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
+        <%= link_to "Marketplace", root_path, class: "font-bold text-gray-900 text-lg" %>
+
+        <div class="flex items-center gap-6">
+          <%= link_to "Каталог", catalog_products_path, class: "text-sm text-gray-600 hover:text-gray-900" %>
+
+          <% if user_signed_in? %>
+            <details class="relative">
+              <summary class="cursor-pointer list-none text-sm text-gray-600 hover:text-gray-900 select-none">
+                <%= current_user.display_name %> <span class="text-gray-400">▾</span>
+              </summary>
+              <div class="absolute right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-lg py-1 w-48 z-50">
+                <% if current_user.seller? %>
+                  <%= link_to "Кабинет продавца", seller_products_path,
+                        class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50" %>
+                  <div class="border-t border-gray-100 my-1"></div>
+                <% end %>
+                <%= link_to "Выйти", destroy_user_session_path,
+                      data: { turbo_method: :delete },
+                      class: "block px-4 py-2 text-sm text-red-600 hover:bg-red-50" %>
+              </div>
+            </details>
+          <% else %>
+            <%= link_to "Войти", new_user_session_path, class: "text-sm text-gray-600 hover:text-gray-900" %>
+          <% end %>
+
+          <%= render "carts/nav_count" %>
+        </div>
+      </div>
+    </nav>
+
+    <%= render "shared/flash" %>
 
     <%= yield %>
   </body>

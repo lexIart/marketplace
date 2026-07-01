@@ -29,3 +29,4 @@ Thumbs.db
 *.swp
 /app/assets/builds/*
 !/app/assets/builds/.keep
+to_remember.md

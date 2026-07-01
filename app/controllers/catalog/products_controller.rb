@@ -7,6 +7,9 @@ class Catalog::ProductsController < ApplicationController
   end
 
   def show
-    @product = Product.published.find_by!(slug: params[:id])
+    @product = Product.published
+                      .includes(:thumbnail_attachment,
+                                variants: [:images_attachments, { option_values: :option_type }])
+                      .find_by!(slug: params[:id])
   end
 end

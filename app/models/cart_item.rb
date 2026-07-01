@@ -6,7 +6,7 @@ class CartItem < ApplicationRecord
   validates :unit_price, numericality: { greater_than_or_equal_to: 0 }
   validates :variant_id, uniqueness: { scope: :cart_id }
 
-  before_create :snapshot_price
+  before_validation :snapshot_price, on: :create
 
   def price_changed?
     unit_price != variant.price

@@ -1,0 +1,19 @@
+<div id="cart_summary" class="bg-white rounded-xl border border-gray-200 p-6 sticky top-4">
+  <h2 class="font-semibold text-gray-900 mb-4">Итого</h2>
+
+  <div class="space-y-2 text-sm text-gray-600 mb-4">
+    <div class="flex justify-between">
+      <span>Товаров:</span>
+      <span><%= current_cart.item_count %> шт.</span>
+    </div>
+    <div class="flex justify-between font-semibold text-gray-900 text-base pt-2 border-t border-gray-100">
+      <span>Сумма:</span>
+      <span><%= number_to_currency(current_cart.total, unit: "₽", format: "%n %u", separator: ",", delimiter: " ") %></span>
+    </div>
+  </div>
+
+  <button disabled class="w-full bg-gray-900 text-white py-3 rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+    Оформить заказ
+  </button>
+  <p class="text-xs text-gray-400 text-center mt-2">Оформление заказов — в следующем модуле</p>
+</div>

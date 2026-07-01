@@ -1,0 +1,9 @@
+<% message = local_assigns[:notice] || local_assigns[:alert] %>
+<% is_notice = local_assigns.key?(:notice) %>
+<% if message.present? %>
+  <% css = is_notice ? "bg-green-50 border-green-200 text-green-800" : "bg-red-50 border-red-200 text-red-800" %>
+  <div data-controller="flash"
+       class="pointer-events-auto rounded-lg border px-4 py-3 text-sm shadow-lg transition-opacity duration-500 <%= css %>">
+    <%= message %>
+  </div>
+<% end %>

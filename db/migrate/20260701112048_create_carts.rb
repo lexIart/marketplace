@@ -1,6 +1,7 @@
 class CreateCarts < ActiveRecord::Migration[7.1]
   def change
     create_table :carts do |t|
+      # nullable if user is in guest mode
       t.uuid :user_id
       t.string :token, null: false
       t.datetime :expires_at, null: false

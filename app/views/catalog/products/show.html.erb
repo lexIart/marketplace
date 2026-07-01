@@ -1,22 +1,45 @@
+<% all_images = [] %>
+<% all_images << @product.thumbnail if @product.thumbnail.attached? %>
+<% @product.variants.each { |v| v.images.each { |img| all_images << img } } %>
+
 <div class="max-w-5xl mx-auto px-4 py-8">
   <%= link_to '← Назад в каталог', catalog_products_path, class: "text-sm text-gray-500 hover:text-gray-800" %>
 
   <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-10">
-    <%# Фото %>
-    <div class="space-y-3">
-      <% first_variant_with_image = @product.variants.find { |v| v.images.attached? } %>
-      <% display_image = first_variant_with_image&.images&.first.presence || (@product.thumbnail.attached? ? @product.thumbnail : nil) %>
 
-      <% if display_image %>
+    <%# Галерея %>
+    <div data-controller="gallery">
+      <% if all_images.any? %>
+        <%# Главное фото %>
         <div class="aspect-square bg-gray-100 rounded-xl overflow-hidden">
-          <%= image_tag display_image, class: "w-full h-full object-cover", alt: @product.name %>
+          <%= image_tag all_images.first,
+                data: { gallery_target: "main" },
+                class: "w-full h-full object-cover",
+                alt: @product.name %>
         </div>
+
+        <%# Стрип миниатюр %>
+        <% if all_images.size > 1 %>
+          <div class="flex gap-2 mt-3 overflow-x-auto pb-1">
+            <% all_images.each_with_index do |img, i| %>
+              <div data-gallery-target="thumb"
+                   data-action="click->gallery#select"
+                   data-src="<%= url_for(img) %>"
+                   class="w-16 h-16 shrink-0 cursor-pointer rounded-lg overflow-hidden border border-gray-200 <%= i == 0 ? 'ring-2 ring-gray-900 ring-offset-1' : 'opacity-70' %>">
+                <%= image_tag img, class: "w-full h-full object-cover", alt: "" %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+
       <% else %>
-        <div class="aspect-square bg-gray-100 rounded-xl flex items-center justify-center text-gray-400">Нет фото</div>
+        <div class="aspect-square bg-gray-100 rounded-xl flex items-center justify-center text-gray-400">
+          Нет фото
+        </div>
       <% end %>
     </div>
 
-    <%# Информация о товаре %>
+    <%# Информация %>
     <div>
       <% if @product.category %>
         <p class="text-sm text-gray-400 mb-1"><%= @product.category.name %></p>
@@ -32,17 +55,44 @@
 
       <%# Варианты %>
       <% if @product.variants.any? %>
-        <div class="mt-6 space-y-3">
-          <h3 class="font-semibold text-gray-800">Варианты</h3>
+        <div class="mt-6 space-y-2">
+          <h3 class="font-semibold text-gray-800 mb-3">Варианты</h3>
           <% @product.variants.active.each do |variant| %>
-            <div class="flex items-center justify-between border border-gray-200 rounded-lg px-4 py-3">
-              <div>
-                <p class="text-sm font-medium text-gray-800"><%= variant.option_summary.presence || 'Базовый вариант' %></p>
+            <div class="flex items-center gap-3 border border-gray-200 rounded-lg p-3">
+              <%# Фото варианта %>
+              <div class="w-12 h-12 shrink-0 bg-gray-100 rounded-lg overflow-hidden">
+                <% variant_img = variant.images.first %>
+                <% if variant_img %>
+                  <%= image_tag variant_img, class: "w-full h-full object-cover", alt: "" %>
+                <% else %>
+                  <div class="w-full h-full flex items-center justify-center text-gray-300 text-xs">—</div>
+                <% end %>
+              </div>
+
+              <%# Описание %>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-medium text-gray-800 truncate">
+                  <%= variant.option_summary.presence || 'Базовый вариант' %>
+                </p>
                 <p class="text-xs text-gray-400">SKU: <%= variant.sku %></p>
               </div>
-              <div class="text-right">
-                <p class="font-semibold text-gray-900"><%= number_to_currency(variant.price, unit: '₽', format: '%n %u', separator: ',', delimiter: ' ') %></p>
-                <p class="text-xs text-gray-400"><%= variant.stock > 0 ? "В наличии: #{variant.stock}" : 'Нет в наличии' %></p>
+
+              <%# Цена и кнопка %>
+              <div class="text-right flex flex-col items-end gap-1.5 shrink-0">
+                <p class="font-semibold text-gray-900 text-sm">
+                  <%= number_to_currency(variant.price, unit: '₽', format: '%n %u', separator: ',', delimiter: ' ') %>
+                </p>
+                <p class="text-xs text-gray-400">
+                  <%= variant.stock > 0 ? "#{variant.stock} шт." : 'Нет в наличии' %>
+                </p>
+                <% if variant.stock > 0 %>
+                  <%= button_to "В корзину",
+                        cart_cart_items_path,
+                        params: { variant_id: variant.id, quantity: 1 },
+                        class: "bg-gray-900 text-white text-xs px-3 py-1.5 rounded-lg hover:bg-gray-700 transition-colors" %>
+                <% else %>
+                  <span class="text-xs text-gray-400">Нет в наличии</span>
+                <% end %>
               </div>
             </div>
           <% end %>

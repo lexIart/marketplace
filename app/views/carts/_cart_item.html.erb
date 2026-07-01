@@ -1,0 +1,66 @@
+<%= tag.div id: dom_id(cart_item), class: "flex gap-4 py-4 border-b border-gray-100 last:border-0" do %>
+  <%# Фото %>
+  <div class="w-20 h-20 shrink-0 bg-gray-100 rounded-lg overflow-hidden">
+    <% image = cart_item.variant.images.first || (cart_item.variant.product.thumbnail.attached? ? cart_item.variant.product.thumbnail : nil) %>
+    <% if image %>
+      <%= image_tag image, class: "w-full h-full object-cover", alt: cart_item.variant.product.name %>
+    <% else %>
+      <div class="w-full h-full flex items-center justify-center text-gray-300 text-xs">Нет фото</div>
+    <% end %>
+  </div>
+
+  <%# Описание %>
+  <div class="flex-1 min-w-0">
+    <p class="font-medium text-gray-900 text-sm leading-tight">
+      <%= link_to cart_item.variant.product.name, catalog_product_path(cart_item.variant.product), class: "hover:underline" %>
+    </p>
+    <% summary = cart_item.variant.option_summary.presence %>
+    <% if summary %>
+      <p class="text-xs text-gray-500 mt-0.5"><%= summary %></p>
+    <% end %>
+
+    <%# Предупреждение об изменении цены %>
+    <% if cart_item.price_changed? %>
+      <p class="text-xs text-amber-600 mt-1">
+        Цена изменилась: <s><%= number_to_currency(cart_item.unit_price, unit: "₽", format: "%n %u", separator: ",", delimiter: " ") %></s>
+        → <%= number_to_currency(cart_item.current_price, unit: "₽", format: "%n %u", separator: ",", delimiter: " ") %>
+      </p>
+    <% end %>
+
+    <%# Наличие %>
+    <% if cart_item.variant.stock == 0 %>
+      <p class="text-xs text-red-600 mt-1">Нет в наличии</p>
+    <% elsif cart_item.quantity > cart_item.variant.stock %>
+      <p class="text-xs text-red-600 mt-1">Доступно только <%= cart_item.variant.stock %> шт.</p>
+    <% end %>
+  </div>
+
+  <%# Управление количеством %>
+  <div class="flex flex-col items-end justify-between shrink-0">
+    <p class="font-semibold text-gray-900 text-sm">
+      <%= number_to_currency(cart_item.subtotal, unit: "₽", format: "%n %u", separator: ",", delimiter: " ") %>
+    </p>
+
+    <div class="flex items-center gap-2 mt-2">
+      <div class="flex items-center gap-1">
+        <%= form_with url: cart_cart_item_path(cart_item), method: :patch do %>
+          <%= hidden_field_tag "cart_item[quantity]", [cart_item.quantity - 1, 1].max %>
+          <button type="submit" class="w-7 h-7 rounded border border-gray-300 text-gray-600 hover:bg-gray-50 flex items-center justify-center text-sm font-medium">−</button>
+        <% end %>
+        <span class="w-8 text-center text-sm font-medium text-gray-800"><%= cart_item.quantity %></span>
+        <%= form_with url: cart_cart_item_path(cart_item), method: :patch do %>
+          <%= hidden_field_tag "cart_item[quantity]", cart_item.quantity + 1 %>
+          <button type="submit" class="w-7 h-7 rounded border border-gray-300 text-gray-600 hover:bg-gray-50 flex items-center justify-center text-sm font-medium">+</button>
+        <% end %>
+      </div>
+
+      <%= button_to cart_cart_item_path(cart_item), method: :delete,
+            class: "ml-2 text-gray-400 hover:text-red-500 transition-colors",
+            form: { data: { turbo_confirm: "Удалить товар из корзины?" } } do %>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+      <% end %>
+    </div>
+  </div>
+<% end %>
