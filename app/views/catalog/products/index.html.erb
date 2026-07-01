@@ -28,28 +28,30 @@
   <% if @products.any? %>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       <% @products.each do |product| %>
-        <%= link_to catalog_product_path(product), class: "group block bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100" do %>
-          <div class="aspect-square bg-gray-100 rounded-t-xl overflow-hidden">
-            <% if product.thumbnail.attached? %>
-              <%= image_tag product.thumbnail, class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-300", alt: product.name %>
-            <% else %>
-              <div class="w-full h-full flex items-center justify-center text-gray-400 text-sm">Нет фото</div>
-            <% end %>
-          </div>
-          <div class="p-4">
-            <h2 class="font-semibold text-gray-900 text-sm leading-tight line-clamp-2"><%= product.name %></h2>
-            <% if product.category %>
-              <p class="text-xs text-gray-400 mt-1"><%= product.category.name %></p>
-            <% end %>
-            <p class="text-sm font-medium text-gray-700 mt-2">
-              <% min_price = product.variants.minimum(:price) %>
-              <% if min_price %>
-                от <%= number_to_currency(min_price, unit: '₽', format: '%n %u', separator: ',', delimiter: ' ') %>
+        <% cache product do %>
+          <%= link_to catalog_product_path(product), class: "group block bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow border border-gray-100" do %>
+            <div class="aspect-square bg-gray-100 rounded-t-xl overflow-hidden">
+              <% if product.thumbnail.attached? %>
+                <%= image_tag product.thumbnail, class: "w-full h-full object-cover group-hover:scale-105 transition-transform duration-300", alt: product.name %>
               <% else %>
-                Цена не указана
+                <div class="w-full h-full flex items-center justify-center text-gray-400 text-sm">Нет фото</div>
               <% end %>
-            </p>
-          </div>
+            </div>
+            <div class="p-4">
+              <h2 class="font-semibold text-gray-900 text-sm leading-tight line-clamp-2"><%= product.name %></h2>
+              <% if product.category %>
+                <p class="text-xs text-gray-400 mt-1"><%= product.category.name %></p>
+              <% end %>
+              <p class="text-sm font-medium text-gray-700 mt-2">
+                <% min_price = product.variants.map(&:price).min %>
+                <% if min_price %>
+                  от <%= number_to_currency(min_price, unit: '₽', format: '%n %u', separator: ',', delimiter: ' ') %>
+                <% else %>
+                  Цена не указана
+                <% end %>
+              </p>
+            </div>
+          <% end %>
         <% end %>
       <% end %>
     </div>
